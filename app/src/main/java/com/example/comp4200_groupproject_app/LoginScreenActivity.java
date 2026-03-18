@@ -1,12 +1,14 @@
 package com.example.comp4200_groupproject_app;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,6 +21,7 @@ public class LoginScreenActivity extends AppCompatActivity {
     TextView donthaveaccount;
     ImageView imagelogoview;
     Button loginbutton;
+    DBHelper dbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,17 +34,24 @@ public class LoginScreenActivity extends AppCompatActivity {
         donthaveaccount = findViewById(R.id.donthaveaccount);
         imagelogoview = findViewById(R.id.imagelogoview);
         loginbutton = findViewById(R.id.loginbutton);
+        dbHelper = new DBHelper(this, "PocketPalUsers_database", null, 1);
+        dbHelper.getReadableDatabase();
 
         loginbutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                String username = usernameview.getText().toString();
-//                String password = passwordview.getText().toString();
-//                if(!username.isEmptyu() && !password.isEmpty()){
-//
-//                }
-                Intent intent = new Intent(LoginScreenActivity.this, MainActivity.class);
-                startActivity(intent);
+                String email = usernameview.getText().toString();
+                String password = passwordview.getText().toString();
+
+                Cursor cursor = dbHelper.checkuser(email, password);
+                if(cursor.getCount() > 0){
+                    Toast.makeText(LoginScreenActivity.this, "Login was successful", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(LoginScreenActivity.this, MainActivity.class);
+                    startActivity(intent);
+                }
+                else {
+                    Toast.makeText(LoginScreenActivity.this, "Invalid credentials", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
