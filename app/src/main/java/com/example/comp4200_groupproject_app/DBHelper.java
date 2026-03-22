@@ -22,11 +22,19 @@ public class DBHelper extends SQLiteOpenHelper{
                 "email TEXT UNIQUE, " +
                 "password TEXT)";
         sqLiteDatabase.execSQL(query);
+
+        String expensetable = "CREATE TABLE expenses(" + "_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "title TEXT, " +
+                "category TEXT, " +
+                "amount REAL, " +
+                "date TEXT)";
+        sqLiteDatabase.execSQL(expensetable);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS users");
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS expenses");
         onCreate(sqLiteDatabase);
     }
 
@@ -47,5 +55,26 @@ public class DBHelper extends SQLiteOpenHelper{
         SQLiteDatabase sqLiteDatabase = getReadableDatabase();
         return sqLiteDatabase.rawQuery("SELECT * FROM users WHERE email=? AND password=?",
                 new String[]{email, password});
+    }
+
+    public long addexpense(String title, String category, double amount, String date){
+        SQLiteDatabase sqLiteDatabase = getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put("title", title);
+        values.put("category", category);
+        values.put("amount", amount);
+        values.put("date", date);
+        return sqLiteDatabase.insert("expenses", null, values);
+    }
+
+    public void deleteexpense(int id){
+        SQLiteDatabase sqLiteDatabase = getWritableDatabase();
+        sqLiteDatabase.delete("expenses", "_id=?", new String[]{String.valueOf(id)});
+    }
+
+    public Cursor getallexpenses(){
+        SQLiteDatabase sqLiteDatabase = getReadableDatabase();
+        return sqLiteDatabase.rawQuery("SELECT * FROM expenses ORDER by _id DESC", null);
     }
 }

@@ -1,0 +1,54 @@
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="16dp"
+    android:layout_marginHorizontal="10dp"
+    app:cardElevation="6dp"
+    app:cardCornerRadius="12dp">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:orientation="vertical"
+        android:background="#D1E5F4">
+
+        <TextView
+            android:id="@+id/texttitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Apple"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:textColor="@color/black"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/textcategory"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Grocery"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/textdate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Feb 23, 2025"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/textamount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="$6.00"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:gravity="end"/>
+    </LinearLayout>
+</androidx.cardview.widget.CardView>
