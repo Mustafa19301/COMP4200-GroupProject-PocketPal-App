@@ -12,6 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.COMP4200_GroupProject_App">
         <activity
+            android:name=".AddExpenseActivity"
+            android:exported="false" />
+        <activity
             android:name=".CreateAccountScreenActivity"
             android:exported="false" />
         <activity
