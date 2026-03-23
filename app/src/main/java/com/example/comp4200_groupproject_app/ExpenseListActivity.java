@@ -20,7 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 public class ExpenseListActivity extends AppCompatActivity {
-    TextView textviewbottom, textviewtop, textviewtitle, textEmpty;
+    TextView textviewbottom, textviewtop, textviewtitle, textempty;
     Button button;
     ImageView imageviewlogo;
     RecyclerView recyclerView;
@@ -38,7 +38,7 @@ public class ExpenseListActivity extends AppCompatActivity {
         textviewbottom = findViewById(R.id.textviewbottom);
         textviewtop = findViewById(R.id.textviewtop);
         textviewtitle = findViewById(R.id.textviewtitle);
-        textEmpty = findViewById(R.id.textEmpty);
+        textempty = findViewById(R.id.textempty);
         button = findViewById(R.id.button);
         imageviewlogo = findViewById(R.id.imageviewlogo);
         dbHelper = new DBHelper(this, "PocketPalUsers_database", null, 1);
@@ -94,10 +94,10 @@ public class ExpenseListActivity extends AppCompatActivity {
         adapter.notifyDataSetChanged();
 
         if(list.isEmpty()){
-            textEmpty.setVisibility(View.VISIBLE);
+            textempty.setVisibility(View.VISIBLE);
             recyclerView.setVisibility(View.GONE);
         } else {
-            textEmpty.setVisibility(View.GONE);
+            textempty.setVisibility(View.GONE);
             recyclerView.setVisibility(View.VISIBLE);
         }
     }

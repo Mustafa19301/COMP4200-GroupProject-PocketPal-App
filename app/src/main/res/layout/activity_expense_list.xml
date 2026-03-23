@@ -90,7 +90,7 @@
         app:srcCompat="@drawable/pocketpallogo" />
 
     <TextView
-        android:id="@+id/textEmpty"
+        android:id="@+id/textempty"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="No expenses yet"
