@@ -46,7 +46,7 @@ public class LoginScreenActivity extends AppCompatActivity {
                 Cursor cursor = dbHelper.checkuser(email, password);
                 if(cursor.getCount() > 0){
                     Toast.makeText(LoginScreenActivity.this, "Login was successful", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(LoginScreenActivity.this, MainActivity.class);
+                    Intent intent = new Intent(LoginScreenActivity.this, Dashboard.class);
                     startActivity(intent);
                 }
                 else {

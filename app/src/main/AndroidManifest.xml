@@ -18,6 +18,9 @@
             android:name=".AddExpenseActivity"
             android:exported="false" />
         <activity
+            android:name=".Dashboard"
+            android:exported="false"/>
+        <activity
             android:name=".CreateAccountScreenActivity"
             android:exported="false" />
         <activity

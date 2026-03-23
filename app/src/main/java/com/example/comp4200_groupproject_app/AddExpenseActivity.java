@@ -63,6 +63,7 @@ public class AddExpenseActivity extends AppCompatActivity {
 
                 if (result != -1) {
                     Toast.makeText(getApplicationContext(), "Expense Added!", Toast.LENGTH_SHORT).show();
+                    dbHelper.deductBalance(amount);
 
                     Intent intent = new Intent(AddExpenseActivity.this, ExpenseListActivity.class);
                     startActivity(intent);
@@ -75,7 +76,7 @@ public class AddExpenseActivity extends AppCompatActivity {
         buttonDash.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(AddExpenseActivity.this, MainActivity.class);
+                Intent intent = new Intent(AddExpenseActivity.this, Dashboard.class);
                 startActivity(intent);
             }
         });
