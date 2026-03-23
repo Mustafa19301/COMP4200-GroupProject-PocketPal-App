@@ -1,6 +1,7 @@
 package com.example.comp4200_groupproject_app;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
@@ -26,6 +27,7 @@ public class ExpenseListActivity extends AppCompatActivity {
     ArrayList<Expense> list;
     ExpenseAdapter adapter;
     DBHelper dbHelper;
+    int userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +41,8 @@ public class ExpenseListActivity extends AppCompatActivity {
         button = findViewById(R.id.button);
         imageviewlogo = findViewById(R.id.imageviewlogo);
         dbHelper = new DBHelper(this, "PocketPalUsers_database", null, 1);
+        SharedPreferences prefs = getSharedPreferences("user_session", MODE_PRIVATE);
+        userId = prefs.getInt("userId", -1);
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -49,7 +53,7 @@ public class ExpenseListActivity extends AppCompatActivity {
         });
 
         list = new ArrayList<>();
-        adapter = new ExpenseAdapter(this, list);
+        adapter = new ExpenseAdapter(this, list,userId);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);

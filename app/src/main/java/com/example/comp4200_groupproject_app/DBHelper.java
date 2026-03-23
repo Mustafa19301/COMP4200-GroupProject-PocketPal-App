@@ -20,7 +20,8 @@ public class DBHelper extends SQLiteOpenHelper{
                 "firstname TEXT, " +
                 "lastname TEXT, " +
                 "email TEXT UNIQUE, " +
-                "password TEXT)";
+                "password TEXT, "+
+                "balance REAL)";
         sqLiteDatabase.execSQL(query);
 
         String expensetable = "CREATE TABLE expenses(" + "_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -84,48 +85,50 @@ public class DBHelper extends SQLiteOpenHelper{
         return sqLiteDatabase.rawQuery("SELECT * FROM expenses ORDER by _id DESC", null);
     }
 
-    public boolean hasBalance(){
+    public boolean hasBalance(int userId){
         SQLiteDatabase db = getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM balance WHERE _id=1", null);
-        boolean exists = cursor.moveToFirst();
+        Cursor cursor = db.rawQuery("SELECT balance FROM users WHERE _id=?", new String[]{String.valueOf(userId)});
+        cursor.moveToFirst();
+        boolean exists = !cursor.isNull(cursor.getColumnIndexOrThrow("balance"));
         cursor.close();
         return exists;
     }
-    public long setInitialBalance(double balance){
-        if(balance<0 || hasBalance()){
-            return -1;
+    public boolean setInitialBalance(int userId, double balance){
+        if(balance<0 || hasBalance(userId)){
+            return false;
         }
         SQLiteDatabase db = getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put("_id",1);
+
         values.put("balance",balance);
-        return db.insert("balance",null, values);
+        int rows = db.update("users", values, "_id=?", new String[]{String.valueOf(userId)});
+        return rows > 0;
     }
 
-    public double getBalance(){
+    public double getBalance(int userId){
         SQLiteDatabase db = getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT balance FROM balance WHERE _id=1", null);
+        Cursor cursor = db.rawQuery("SELECT balance FROM users WHERE _id=?", new String[]{String.valueOf(userId)});
         cursor.moveToFirst();
         double balance = cursor.getDouble(cursor.getColumnIndexOrThrow("balance"));
         cursor.close();
         return balance;
     }
 
-    public boolean deductBalance(double amount){
+    public boolean deductBalance(int userId, double amount){
         SQLiteDatabase db = getWritableDatabase();
-        double currentBalance = getBalance();
+        double currentBalance = getBalance(userId);
         ContentValues values = new ContentValues();
         values.put("balance", currentBalance-amount);
-        int rows = db.update("balance", values, "_id=?", new String[]{"1"});
+        int rows = db.update("users", values, "_id=?", new String[]{String.valueOf(userId)});
         return rows>0;
     }
 
-    public boolean addBalance(double amount){
+    public boolean addBalance(int userId,double amount){
         SQLiteDatabase db = getWritableDatabase();
-        double currentBalance = getBalance();
+        double currentBalance = getBalance(userId);
         ContentValues values = new ContentValues();
         values.put("balance", currentBalance+amount);
-        int rows = db.update("balance", values, "_id=?", new String[]{"1"});
+        int rows = db.update("users", values, "_id=?", new String[]{String.valueOf(userId)});
         return rows>0;
     }
 }

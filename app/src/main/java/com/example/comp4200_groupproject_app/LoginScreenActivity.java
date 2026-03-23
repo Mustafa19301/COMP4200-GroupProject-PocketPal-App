@@ -1,6 +1,7 @@
 package com.example.comp4200_groupproject_app;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
@@ -45,8 +46,15 @@ public class LoginScreenActivity extends AppCompatActivity {
 
                 Cursor cursor = dbHelper.checkuser(email, password);
                 if(cursor.getCount() > 0){
+                    cursor.moveToFirst();
+                    int userId = cursor.getInt(cursor.getColumnIndexOrThrow("_id"));
                     Toast.makeText(LoginScreenActivity.this, "Login was successful", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(LoginScreenActivity.this, Dashboard.class);
+                    SharedPreferences preferences = getSharedPreferences("user_session",MODE_PRIVATE);
+                    SharedPreferences.Editor editor = preferences.edit();
+                    editor.putInt("userId",userId);
+                    editor.apply();
+
                     startActivity(intent);
                 }
                 else {
