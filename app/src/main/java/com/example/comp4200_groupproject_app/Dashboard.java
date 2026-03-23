@@ -44,11 +44,6 @@ public class Dashboard extends AppCompatActivity {
         tv_balance = findViewById(R.id.tv_totalbalance);
         dbHelper = new DBHelper(this, "PocketPalUsers_database", null, 1);
 
-        if(!dbHelper.hasBalance()){
-            showBalanceDialog();
-        }else{
-            tv_balance.setText(String.valueOf(dbHelper.getBalance()));
-        }
 
         addExpense.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -75,7 +70,11 @@ public class Dashboard extends AppCompatActivity {
     @Override
     protected void onResume(){
         super.onResume();
-        tv_balance.setText(String.valueOf(dbHelper.getBalance()));
+        if(!dbHelper.hasBalance()){
+            showBalanceDialog();
+        }else{
+            tv_balance.setText(String.valueOf(dbHelper.getBalance()));
+        }
         //getExpenses();
     }
 
