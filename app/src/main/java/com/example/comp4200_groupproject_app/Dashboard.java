@@ -77,7 +77,8 @@ public class Dashboard extends AppCompatActivity {
         if(!dbHelper.hasBalance(userId)){
             showBalanceDialog();
         }else{
-            tv_balance.setText(String.valueOf(dbHelper.getBalance(userId)));
+            double balance = dbHelper.getBalance(userId);
+            tv_balance.setText(String.format("$%.2f",balance));
         }
         //getExpenses();
     }
@@ -107,7 +108,7 @@ public class Dashboard extends AppCompatActivity {
             }
             boolean result = dbHelper.setInitialBalance(userId, balance);
             if (result) {
-                tv_balance.setText(String.valueOf(dbHelper.getBalance(userId)));
+                tv_balance.setText(String.format("$%.2f",balance));
                 dialog.dismiss();
             } else {
                 Toast.makeText(Dashboard.this, "Balance already set or invalid", Toast.LENGTH_SHORT).show();
