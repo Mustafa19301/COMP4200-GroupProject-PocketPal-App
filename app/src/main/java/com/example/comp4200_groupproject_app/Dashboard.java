@@ -3,11 +3,15 @@ package com.example.comp4200_groupproject_app;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -19,12 +23,10 @@ import java.util.ArrayList;
 
 public class Dashboard extends AppCompatActivity {
 
-    Button addExpense, expenseList;
-    TextView tv_expenses, tv_income, tv_balance;
+    Button addExpense, expenseList, viewWishlist;
+    TextView tv_balance;
     DBHelper dbHelper;
-    ArrayList<Expense> expenses;
-    ExpenseAdapter adapter;
-    RecyclerView recyclerView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,11 +40,15 @@ public class Dashboard extends AppCompatActivity {
         });
         addExpense = findViewById(R.id.button_addexpenses);
         expenseList = findViewById(R.id.button_viewexpenses);
-        tv_expenses = findViewById(R.id.tv_totalexpenses);
-        tv_income = findViewById(R.id.tv_totalincome);
+        viewWishlist = findViewById(R.id.button_viewexpenses);
         tv_balance = findViewById(R.id.tv_totalbalance);
-        recyclerView = findViewById(R.id.recyclerviewexpense);
         dbHelper = new DBHelper(this, "PocketPalUsers_database", null, 1);
+
+        if(!dbHelper.hasBalance()){
+            showBalanceDialog();
+        }else{
+            tv_balance.setText(String.valueOf(dbHelper.getBalance()));
+        }
 
         addExpense.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,41 +65,51 @@ public class Dashboard extends AppCompatActivity {
             }
         });
 
-        expenses = new ArrayList<>();
-        adapter = new ExpenseAdapter(this, expenses);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(adapter);
-        getExpenses();
+
+
+        //tv_balance.setText(String.valueOf(dbHelper.getBalance()));
+        //getExpenses();
 
     }
 
     @Override
     protected void onResume(){
         super.onResume();
-        getExpenses();
+        tv_balance.setText(String.valueOf(dbHelper.getBalance()));
+        //getExpenses();
     }
 
-    public void getExpenses(){
-        expenses.clear();
-        Cursor cursor = dbHelper.getallexpenses();
-        double total =0.0;
 
-        if(cursor.getCount() > 0){
-            while(cursor.moveToNext()){
-                int id = cursor.getInt(cursor.getColumnIndexOrThrow("_id"));
-                String title = cursor.getString(cursor.getColumnIndexOrThrow("title"));
-                String category = cursor.getString(cursor.getColumnIndexOrThrow("category"));
-                double amount = cursor.getDouble(cursor.getColumnIndexOrThrow("amount"));
-                String date = cursor.getString(cursor.getColumnIndexOrThrow("date"));
+    private void showBalanceDialog(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Enter Initial Balance");
 
-                total+=amount;
+        EditText input = new EditText(this);
+        input.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+        input.setHint("Enter balance");
+        builder.setView(input);
+        builder.setCancelable(false);
+        builder.setPositiveButton("Save",null);
+        AlertDialog dialog = builder.create();
+        dialog.show();
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v->{
+                    String value = input.getText().toString().trim();
+                    if(value.isEmpty()){
+                        input.setError("Balance is required");
+                    }
+                    double balance = Double.parseDouble(value);
+                    if(balance<0){
+                        input.setError("Balance cannot be negative");
+                        return;
+                    }
+                    long result = dbHelper.setInitialBalance(balance);
+                    if (result != -1) {
+                        tv_balance.setText(String.valueOf(dbHelper.getBalance()));
+                        dialog.dismiss();
+                    } else {
+                        Toast.makeText(Dashboard.this, "Balance already set or invalid", Toast.LENGTH_SHORT).show();
+                    }
+                });
 
-                expenses.add(new Expense(id, title, category, amount, date));
-            }
-            cursor.close();
-        }
-
-        adapter.notifyDataSetChanged();
-        tv_expenses.setText(Double.toString(total));
     }
 }

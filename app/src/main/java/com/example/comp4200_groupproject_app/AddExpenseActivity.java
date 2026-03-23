@@ -63,6 +63,7 @@ public class AddExpenseActivity extends AppCompatActivity {
 
                 if (result != -1) {
                     Toast.makeText(getApplicationContext(), "Expense Added!", Toast.LENGTH_SHORT).show();
+                    dbHelper.deductBalance(amount);
 
                     Intent intent = new Intent(AddExpenseActivity.this, ExpenseListActivity.class);
                     startActivity(intent);

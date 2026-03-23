@@ -65,6 +65,7 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ViewHold
                             dbHelper.deleteexpense(e.id);
                             list.remove(position);
                             notifyItemRemoved(position);
+                            dbHelper.addBalance(e.amount);
 
                             Toast.makeText(context, "Deleted", Toast.LENGTH_SHORT).show();
                         })

@@ -51,60 +51,13 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/totalExpenses"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="24dp"
-        android:text="Total Expenses:"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/topBar" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerviewexpense"
-        android:layout_width="381dp"
-        android:layout_height="174dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/totalExpenses" />
-
-    <TextView
-        android:id="@+id/totalincometext"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="328dp"
-        android:text="Total Income:"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/tv_totalexpenses"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="152dp"
-        android:layout_marginTop="24dp"
-        android:text="TextView"
-        app:layout_constraintStart_toEndOf="@+id/totalExpenses"
-        app:layout_constraintTop_toBottomOf="@+id/topBar" />
-
-    <TextView
-        android:id="@+id/tv_totalincome"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="164dp"
-        android:text="TextView"
-        app:layout_constraintStart_toEndOf="@+id/totalincometext"
-        app:layout_constraintTop_toTopOf="@+id/totalincometext" />
-
-    <TextView
         android:id="@+id/balance"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="488dp"
+        android:layout_marginTop="124dp"
         android:text="Total Balance:"
+        android:textSize="25dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -112,29 +65,39 @@
         android:id="@+id/tv_totalbalance"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="160dp"
-        android:text="TextView"
+        android:layout_marginStart="148dp"
+        android:text=""
+        android:textSize="25dp"
+        android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@+id/balance"
         app:layout_constraintTop_toTopOf="@+id/balance" />
 
     <Button
         android:id="@+id/button_addexpenses"
-        android:layout_width="174dp"
-        android:layout_height="54dp"
-        android:layout_marginStart="14dp"
-        android:layout_marginTop="570dp"
+        android:layout_width="177dp"
+        android:layout_height="84dp"
+        android:layout_marginStart="116dp"
+        android:layout_marginTop="324dp"
         android:text="Add Expenses"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/button_viewexpenses"
-        android:layout_width="174dp"
-        android:layout_height="54dp"
-        android:layout_marginStart="40dp"
+        android:layout_width="177dp"
+        android:layout_height="84dp"
+        android:layout_marginTop="8dp"
         android:text="View Expenses"
-        app:layout_constraintStart_toEndOf="@+id/button_addexpenses"
-        app:layout_constraintTop_toTopOf="@+id/button_addexpenses" />
+        app:layout_constraintStart_toStartOf="@+id/button_addexpenses"
+        app:layout_constraintTop_toBottomOf="@+id/button_addexpenses" />
+
+    <Button
+        android:id="@+id/button_viewwishlist"
+        android:layout_width="177dp"
+        android:layout_height="84dp"
+        android:text="View Wishlist"
+        app:layout_constraintStart_toStartOf="@+id/button_viewexpenses"
+        app:layout_constraintTop_toBottomOf="@+id/button_viewexpenses" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
