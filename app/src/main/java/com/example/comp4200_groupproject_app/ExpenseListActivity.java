@@ -43,7 +43,7 @@ public class ExpenseListActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(ExpenseListActivity.this, MainActivity.class);
+                Intent intent = new Intent(ExpenseListActivity.this, Dashboard.class);
                 startActivity(intent);
             }
         });
