@@ -74,7 +74,6 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ViewHold
                             notifyItemRemoved(position);
                             dbHelper.addBalance(userId,e.amount);
 
-                            // ✅ ADD THIS
                             if (listener != null) {
                                 listener.onExpenseDeleted();
                             }

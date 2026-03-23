@@ -57,7 +57,7 @@ public class ExpenseListActivity extends AppCompatActivity {
         adapter = new ExpenseAdapter(this, list, userId, new ExpenseAdapter.OnExpenseDeletedListener() {
             @Override
             public void onExpenseDeleted() {
-                loadExpenses(); // 🔥 this refreshes empty state
+                loadExpenses();
             }
         });
 
