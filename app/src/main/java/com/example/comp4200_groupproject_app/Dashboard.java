@@ -1,6 +1,7 @@
 package com.example.comp4200_groupproject_app;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.text.InputType;
@@ -26,6 +27,7 @@ public class Dashboard extends AppCompatActivity {
     Button addExpense, expenseList, viewWishlist;
     TextView tv_balance;
     DBHelper dbHelper;
+    int userId;
 
 
     @Override
@@ -38,6 +40,8 @@ public class Dashboard extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        SharedPreferences prefs = getSharedPreferences("user_session", MODE_PRIVATE);
+        userId = prefs.getInt("userId", -1);
         addExpense = findViewById(R.id.button_addexpenses);
         expenseList = findViewById(R.id.button_viewexpenses);
         viewWishlist = findViewById(R.id.button_viewexpenses);
@@ -70,10 +74,10 @@ public class Dashboard extends AppCompatActivity {
     @Override
     protected void onResume(){
         super.onResume();
-        if(!dbHelper.hasBalance()){
+        if(!dbHelper.hasBalance(userId)){
             showBalanceDialog();
         }else{
-            tv_balance.setText(String.valueOf(dbHelper.getBalance()));
+            tv_balance.setText(String.valueOf(dbHelper.getBalance(userId)));
         }
         //getExpenses();
     }
@@ -101,9 +105,9 @@ public class Dashboard extends AppCompatActivity {
                 input.setError("Balance cannot be negative");
                 return;
             }
-            long result = dbHelper.setInitialBalance(balance);
-            if (result != -1) {
-                tv_balance.setText(String.valueOf(dbHelper.getBalance()));
+            boolean result = dbHelper.setInitialBalance(userId, balance);
+            if (result) {
+                tv_balance.setText(String.valueOf(dbHelper.getBalance(userId)));
                 dialog.dismiss();
             } else {
                 Toast.makeText(Dashboard.this, "Balance already set or invalid", Toast.LENGTH_SHORT).show();

@@ -17,10 +17,12 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ViewHold
     ArrayList<Expense> list;
     Context context;
     DBHelper dbHelper;
+    int userId;
 
-    public ExpenseAdapter(Context context, ArrayList<Expense> list) {
+    public ExpenseAdapter(Context context, ArrayList<Expense> list,int userId) {
         this.context = context;
         this.list = list;
+        this.userId = userId;
         dbHelper = new DBHelper(context, "PocketPalUsers_database", null, 1);
     }
 
@@ -65,7 +67,7 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ViewHold
                             dbHelper.deleteexpense(e.id);
                             list.remove(position);
                             notifyItemRemoved(position);
-                            dbHelper.addBalance(e.amount);
+                            dbHelper.addBalance(userId,e.amount);
 
                             Toast.makeText(context, "Deleted", Toast.LENGTH_SHORT).show();
                         })

@@ -1,6 +1,7 @@
 package com.example.comp4200_groupproject_app;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -18,11 +19,15 @@ public class AddExpenseActivity extends AppCompatActivity {
     Spinner spinner;
 
     Button buttonDash, buttonList;
+    int userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_expense);
+
+        SharedPreferences prefs = getSharedPreferences("user_session", MODE_PRIVATE);
+        userId = prefs.getInt("userId", -1);
 
         dbHelper = new DBHelper(this, "PocketPalUsers_database", null, 1);
 
@@ -63,7 +68,7 @@ public class AddExpenseActivity extends AppCompatActivity {
 
                 if (result != -1) {
                     Toast.makeText(getApplicationContext(), "Expense Added!", Toast.LENGTH_SHORT).show();
-                    dbHelper.deductBalance(amount);
+                    dbHelper.deductBalance(userId,amount);
 
                     Intent intent = new Intent(AddExpenseActivity.this, ExpenseListActivity.class);
                     startActivity(intent);
