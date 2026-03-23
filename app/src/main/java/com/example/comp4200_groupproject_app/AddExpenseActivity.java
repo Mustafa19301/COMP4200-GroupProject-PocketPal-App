@@ -64,7 +64,7 @@ public class AddExpenseActivity extends AppCompatActivity {
 
                 double amount = Double.parseDouble(amountStr);
 
-                long result = dbHelper.addexpense(name, category, amount, date);
+                long result = dbHelper.addexpense(userId, name, category, amount, date);
 
                 if (result != -1) {
                     Toast.makeText(getApplicationContext(), "Expense Added!", Toast.LENGTH_SHORT).show();
