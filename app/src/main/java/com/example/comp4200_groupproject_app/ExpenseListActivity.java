@@ -70,7 +70,7 @@ public class ExpenseListActivity extends AppCompatActivity {
     public void loadExpenses(){
         list.clear();
 
-        Cursor cursor = dbHelper.getallexpenses();
+        Cursor cursor = dbHelper.getallexpenses(userId);
 
         if(cursor.getCount() > 0){
             while(cursor.moveToNext()){

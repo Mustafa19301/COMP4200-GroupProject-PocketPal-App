@@ -24,7 +24,9 @@ public class DBHelper extends SQLiteOpenHelper{
                 "balance REAL)";
         sqLiteDatabase.execSQL(query);
 
-        String expensetable = "CREATE TABLE expenses(" + "_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+        String expensetable = "CREATE TABLE expenses(" +
+                "_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "userId INTEGER, " +
                 "title TEXT, " +
                 "category TEXT, " +
                 "amount REAL, " +
@@ -64,10 +66,11 @@ public class DBHelper extends SQLiteOpenHelper{
                 new String[]{email, password});
     }
 
-    public long addexpense(String title, String category, double amount, String date){
+    public long addexpense(int userId, String title, String category, double amount, String date){
         SQLiteDatabase sqLiteDatabase = getWritableDatabase();
         ContentValues values = new ContentValues();
 
+        values.put("userId", userId);
         values.put("title", title);
         values.put("category", category);
         values.put("amount", amount);
@@ -80,9 +83,11 @@ public class DBHelper extends SQLiteOpenHelper{
         sqLiteDatabase.delete("expenses", "_id=?", new String[]{String.valueOf(id)});
     }
 
-    public Cursor getallexpenses(){
+    public Cursor getallexpenses(int userId){
         SQLiteDatabase sqLiteDatabase = getReadableDatabase();
-        return sqLiteDatabase.rawQuery("SELECT * FROM expenses ORDER by _id DESC", null);
+        return sqLiteDatabase.rawQuery("SELECT * FROM expenses WHERE userId=? ORDER by _id DESC",
+                new String[]{String.valueOf(userId)}
+        );
     }
 
     public boolean hasBalance(int userId){
