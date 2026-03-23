@@ -61,6 +61,7 @@
         app:layout_constraintTop_toBottomOf="@id/topBar" />
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerviewexpense"
         android:layout_width="381dp"
         android:layout_height="174dp"
         android:layout_marginStart="16dp"

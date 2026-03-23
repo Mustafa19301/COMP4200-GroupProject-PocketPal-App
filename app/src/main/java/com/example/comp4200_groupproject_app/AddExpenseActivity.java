@@ -75,7 +75,7 @@ public class AddExpenseActivity extends AppCompatActivity {
         buttonDash.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(AddExpenseActivity.this, MainActivity.class);
+                Intent intent = new Intent(AddExpenseActivity.this, Dashboard.class);
                 startActivity(intent);
             }
         });
