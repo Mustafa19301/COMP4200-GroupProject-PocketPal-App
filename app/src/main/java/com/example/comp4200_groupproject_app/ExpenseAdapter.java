@@ -13,16 +13,21 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ViewHolder> {
+    public interface OnExpenseDeletedListener {
+        void onExpenseDeleted();
+    }
 
     ArrayList<Expense> list;
     Context context;
     DBHelper dbHelper;
     int userId;
+    OnExpenseDeletedListener listener;
 
-    public ExpenseAdapter(Context context, ArrayList<Expense> list,int userId) {
+    public ExpenseAdapter(Context context, ArrayList<Expense> list,int userId, OnExpenseDeletedListener listener) {
         this.context = context;
         this.list = list;
         this.userId = userId;
+        this.listener = listener;
         dbHelper = new DBHelper(context, "PocketPalUsers_database", null, 1);
     }
 
@@ -68,6 +73,10 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ViewHold
                             list.remove(position);
                             notifyItemRemoved(position);
                             dbHelper.addBalance(userId,e.amount);
+
+                            if (listener != null) {
+                                listener.onExpenseDeleted();
+                            }
 
                             Toast.makeText(context, "Deleted", Toast.LENGTH_SHORT).show();
                         })

@@ -10,6 +10,9 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import android.app.DatePickerDialog;
+import java.util.Calendar;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 public class AddExpenseActivity extends AppCompatActivity {
@@ -63,7 +66,6 @@ public class AddExpenseActivity extends AppCompatActivity {
                 }
 
                 double amount = Double.parseDouble(amountStr);
-
                 long result = dbHelper.addexpense(userId, name, category, amount, date);
 
                 if (result != -1) {
@@ -76,6 +78,25 @@ public class AddExpenseActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "Error adding expense", Toast.LENGTH_SHORT).show();
                 }
             }
+        });
+
+        editDate.setOnClickListener(v -> {
+            Calendar calendar = Calendar.getInstance();
+
+            int year = calendar.get(Calendar.YEAR);
+            int month = calendar.get(Calendar.MONTH);
+            int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+            DatePickerDialog datePicker = new DatePickerDialog(
+                    AddExpenseActivity.this,
+                    (view, selectedYear, selectedMonth, selectedDay) -> {
+                        String date = selectedDay + "/" + (selectedMonth + 1) + "/" + selectedYear;
+                        editDate.setText(date);
+                    },
+                    year, month, day
+            );
+
+            datePicker.show();
         });
 
         buttonDash.setOnClickListener(new View.OnClickListener() {
