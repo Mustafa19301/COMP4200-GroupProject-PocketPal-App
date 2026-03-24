@@ -2,6 +2,7 @@ package com.example.comp4200_groupproject_app;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -64,24 +65,33 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ViewHold
                 int position = holder.getAdapterPosition();
                 Expense e = list.get(position);
 
-                new AlertDialog.Builder(context)
-                        .setTitle("Delete Expense")
-                        .setMessage("Are you sure you want to delete this?")
-                        .setPositiveButton("Yes", (dialog, which) -> {
+                AlertDialog.Builder dialog = new AlertDialog.Builder(context);
+                dialog.setTitle("Delete Expense");
+                dialog.setMessage("Are you sure you want to delete this?");
+                dialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int which) {
 
-                            dbHelper.deleteexpense(e.id);
-                            list.remove(position);
-                            notifyItemRemoved(position);
-                            dbHelper.addBalance(userId,e.amount);
+                        dbHelper.deleteexpense(e.id);
+                        list.remove(position);
+                        notifyItemRemoved(position);
+                        dbHelper.addBalance(userId, e.amount);
 
-                            if (listener != null) {
-                                listener.onExpenseDeleted();
-                            }
+                        if (listener != null) {
+                            listener.onExpenseDeleted();
+                        }
 
-                            Toast.makeText(context, "Deleted", Toast.LENGTH_SHORT).show();
-                        })
-                        .setNegativeButton("Cancel", null)
-                        .show();
+                        Toast.makeText(context.getApplicationContext(), "Deleted Expense", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                dialog.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int which) {
+                        dialogInterface.cancel();
+                    }
+                });
+                dialog.setCancelable(false);
+                dialog.show();
                 return true;
             }
         });
