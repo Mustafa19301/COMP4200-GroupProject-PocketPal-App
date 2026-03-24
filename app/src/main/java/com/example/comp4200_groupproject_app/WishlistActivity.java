@@ -35,8 +35,18 @@ public class WishlistActivity extends AppCompatActivity {
         addBtn = findViewById(R.id.addBtn);
         listContainer = findViewById(R.id.listContainer);
         btn_dashboard = findViewById(R.id.btn_dashboard);
-        btn_dashboard.setOnClickListener(v -> finish());
-        addBtn.setOnClickListener(v -> addItem());
+        btn_dashboard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+        addBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addItem();
+            }
+        });
 
         displayItems();
     }
@@ -92,17 +102,30 @@ public class WishlistActivity extends AppCompatActivity {
 
                 Button addMoneyBtn = new Button(this);
                 addMoneyBtn.setText("Add $");
-                addMoneyBtn.setOnClickListener(v -> showAddMoneyDialog(id));
+                addMoneyBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        showAddMoneyDialog(id);
+                    }
+                });
 
                 Button editBtn = new Button(this);
                 editBtn.setText("Edit");
-                editBtn.setOnClickListener(v -> showEditDialog(id, name, target));
+                editBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        showEditDialog(id, name, target);
+                    }
+                });
 
                 Button delBtn = new Button(this);
                 delBtn.setText("Delete");
-                delBtn.setOnClickListener(v -> {
-                    db.deleteWishlistItem(id);
-                    displayItems();
+                delBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        db.deleteWishlistItem(id);
+                        displayItems();
+                    }
                 });
 
                 buttons.addView(addMoneyBtn);
@@ -122,22 +145,26 @@ public class WishlistActivity extends AppCompatActivity {
         input.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
         input.setHint("Amount to add");
 
-        new AlertDialog.Builder(this)
-                .setTitle("Add Savings")
-                .setView(input)
-                .setPositiveButton("Add", (dialog, which) -> {
-                    String val = input.getText().toString().trim();
-                    if(!val.isEmpty()){
-                        double amt = Double.parseDouble(val);
-                        db.addmoney(id, amt);
-                        displayItems();
-                    }
-                })
-                .setNegativeButton("Cancel", null)
-                .show();
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Add Savings");
+        builder.setView(input);
+        builder.setPositiveButton("Add", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String val = input.getText().toString().trim();
+                if(!val.isEmpty()){
+                    double amt = Double.parseDouble(val);
+                    db.addmoney(id,amt);
+                    displayItems();
+                }
+            }
+        });
+        builder.setNegativeButton("Cancel",null);
+        builder.show();
+
     }
 
-    private void showEditDialog(int id, String oldName, double oldTarget){
+    private void showEditDialog(int id, String oldName, double oldTarget) {
         LinearLayout layout = new LinearLayout(this);
         layout.setOrientation(LinearLayout.VERTICAL);
 
@@ -150,19 +177,22 @@ public class WishlistActivity extends AppCompatActivity {
         targetField.setText(String.valueOf(oldTarget));
         layout.addView(targetField);
 
-        new AlertDialog.Builder(this)
-                .setTitle("Edit Item")
-                .setView(layout)
-                .setPositiveButton("Save", (dialog, which) -> {
-                    String newName = nameField.getText().toString().trim();
-                    String targetStr = targetField.getText().toString().trim();
-                    if(!newName.isEmpty() && !targetStr.isEmpty()){
-                        double newTarget = Double.parseDouble(targetStr);
-                        db.updatewishlist(id, newName, newTarget);
-                        displayItems();
-                    }
-                })
-                .setNegativeButton("Cancel", null)
-                .show();
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Edit Item");
+        builder.setView(layout);
+        builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String newName = nameField.getText().toString().trim();
+                String targetStr = targetField.getText().toString().trim();
+                if (!newName.isEmpty() && !targetStr.isEmpty()) {
+                    double newTarget = Double.parseDouble(targetStr);
+                    db.updatewishlist(id, newName, newTarget);
+                    displayItems();
+                }
+            }
+        });
+        builder.setNegativeButton("Cancel", null);
+        builder.show();
     }
 }
