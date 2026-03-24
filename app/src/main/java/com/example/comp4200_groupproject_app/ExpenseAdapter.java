@@ -60,16 +60,19 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ViewHold
         holder.textamount.setText("$" + e.amount);
 
 
-        holder.itemView.setOnClickListener(v -> {
-            android.content.Intent intent = new android.content.Intent(context, EditExpenseActivity.class);
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                android.content.Intent intent = new android.content.Intent(context, EditExpenseActivity.class);
 
-            intent.putExtra("id", e.id);
-            intent.putExtra("title", e.title);
-            intent.putExtra("category", e.category);
-            intent.putExtra("amount", e.amount);
-            intent.putExtra("date", e.date);
+                intent.putExtra("id", e.id);
+                intent.putExtra("title", e.title);
+                intent.putExtra("category", e.category);
+                intent.putExtra("amount", e.amount);
+                intent.putExtra("date", e.date);
 
-            context.startActivity(intent);
+                context.startActivity(intent);
+            }
         });
 
         holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {

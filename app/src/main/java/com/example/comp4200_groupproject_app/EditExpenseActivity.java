@@ -3,6 +3,7 @@ package com.example.comp4200_groupproject_app;
 import android.app.DatePickerDialog;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.*;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -51,41 +52,63 @@ public class EditExpenseActivity extends AppCompatActivity {
 
         buttonUpdate.setText("Update Expense");
 
-        buttonUpdate.setOnClickListener(v -> {
+        buttonUpdate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
-            String name = editName.getText().toString();
-            double newAmount = Double.parseDouble(editAmount.getText().toString());
-            String date = editDate.getText().toString();
-            String newCategory = spinner.getSelectedItem().toString();
+                String name = editName.getText().toString();
+                String amountStr = editAmount.getText().toString();
+                String date = editDate.getText().toString();
+                String newCategory = spinner.getSelectedItem().toString();
 
-            double difference = newAmount - oldAmount;
+                if (name.isEmpty() || amountStr.isEmpty() || date.isEmpty()) {
+                    Toast.makeText(EditExpenseActivity.this, "Fill all fields", Toast.LENGTH_SHORT).show();
+                    return;
+                }
 
-            if (difference > 0) {
-                dbHelper.deductBalance(userId, difference);
-            } else if (difference < 0) {
-                dbHelper.addBalance(userId, Math.abs(difference));
-            }
+                double newAmount = Double.parseDouble(amountStr);
+                double difference = newAmount - oldAmount;
 
-            boolean success = dbHelper.updateExpense(expenseId, name, newCategory, newAmount, date);
+                if (difference > 0) {
+                    dbHelper.deductBalance(userId, difference);
+                } else if (difference < 0) {
+                    dbHelper.addBalance(userId, Math.abs(difference));
+                }
 
-            if (success) {
-                Toast.makeText(this, "Expense Updated", Toast.LENGTH_SHORT).show();
-                finish();
-            } else {
-                Toast.makeText(this, "Update Failed", Toast.LENGTH_SHORT).show();
+                boolean success = dbHelper.updateExpense(expenseId, name, newCategory, newAmount, date);
+
+                if (success) {
+                    Toast.makeText(EditExpenseActivity.this, "Expense Updated", Toast.LENGTH_SHORT).show();
+                    finish();
+                } else {
+                    Toast.makeText(EditExpenseActivity.this, "Update Failed", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
-        editDate.setOnClickListener(v -> {
-            Calendar calendar = Calendar.getInstance();
+        editDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
-            DatePickerDialog dp = new DatePickerDialog(this,
-                    (view, y, m, d) -> editDate.setText(d + "/" + (m + 1) + "/" + y),
-                    calendar.get(Calendar.YEAR),
-                    calendar.get(Calendar.MONTH),
-                    calendar.get(Calendar.DAY_OF_MONTH));
+                Calendar calendar = Calendar.getInstance();
 
-            dp.show();
+                int year = calendar.get(Calendar.YEAR);
+                int month = calendar.get(Calendar.MONTH);
+                int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+                DatePickerDialog datePickerDialog = new DatePickerDialog(
+                        EditExpenseActivity.this,
+                        new DatePickerDialog.OnDateSetListener() {
+                            @Override
+                            public void onDateSet(DatePicker view, int selectedYear, int selectedMonth, int selectedDay) {
+                                String date = selectedDay + "/" + (selectedMonth + 1) + "/" + selectedYear;
+                                editDate.setText(date);
+                            }
+                        },
+                        year, month, day
+                );
+                datePickerDialog.show();
+            }
         });
     }
 }
