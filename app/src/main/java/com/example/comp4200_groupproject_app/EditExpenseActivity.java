@@ -13,7 +13,7 @@ public class EditExpenseActivity extends AppCompatActivity {
 
     EditText editName, editAmount, editDate;
     Spinner spinner;
-    Button buttonUpdate;
+    Button buttonUpdate, buttonDash;
 
     DBHelper dbHelper;
     int userId, expenseId;
@@ -34,6 +34,8 @@ public class EditExpenseActivity extends AppCompatActivity {
         editDate = findViewById(R.id.edittextdate);
         spinner = findViewById(R.id.spinner);
         buttonUpdate = findViewById(R.id.button2);
+        buttonDash = findViewById(R.id.button);
+
 
         String[] categories = {"Groceries", "Transport", "Entertainment", "Bills", "Gas", "Other"};
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, categories);
@@ -51,7 +53,15 @@ public class EditExpenseActivity extends AppCompatActivity {
         spinner.setSelection(pos);
 
         buttonUpdate.setText("Update Expense");
+        buttonDash.setText("Cancel");
 
+        buttonDash.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(EditExpenseActivity.this, "Changes discarded", Toast.LENGTH_SHORT).show();
+                finish();
+            }
+        });
         buttonUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
