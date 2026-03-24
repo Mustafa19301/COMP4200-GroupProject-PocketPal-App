@@ -8,19 +8,19 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import androidx.annotation.Nullable;
 
-public class DBHelper extends SQLiteOpenHelper{
+public class DBHelper extends SQLiteOpenHelper {
     public DBHelper(@Nullable Context context, @Nullable String name, @Nullable SQLiteDatabase.CursorFactory factory, int version) {
         super(context, name, factory, version);
     }
 
     @Override
-    public void onCreate(SQLiteDatabase sqLiteDatabase){
+    public void onCreate(SQLiteDatabase sqLiteDatabase) {
         String query = "CREATE TABLE users(" +
                 "_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "firstname TEXT, " +
                 "lastname TEXT, " +
                 "email TEXT UNIQUE, " +
-                "password TEXT, "+
+                "password TEXT, " +
                 "balance REAL)";
         sqLiteDatabase.execSQL(query);
 
@@ -33,9 +33,16 @@ public class DBHelper extends SQLiteOpenHelper{
                 "date TEXT)";
         sqLiteDatabase.execSQL(expensetable);
 
-        String balancetable = "CREATE TABLE balance("+
-                "_id INTEGER PRIMARY KEY, "+
+        String balancetable = "CREATE TABLE balance(" +
+                "_id INTEGER PRIMARY KEY, " +
                 "balance REAL)";
+
+        String wishlist = "CREATE TABLE wishlist(" + "_id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "userID INTEGER," +
+                "name TEXT," +
+                "target REAL," +
+                "saved REAL)";
+        sqLiteDatabase.execSQL(wishlist);
         sqLiteDatabase.execSQL(balancetable);
     }
 
@@ -44,11 +51,12 @@ public class DBHelper extends SQLiteOpenHelper{
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS users");
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS expenses");
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS balance");
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS wishlist");
         onCreate(sqLiteDatabase);
     }
 
     //for registering user
-    public long adduser(String firstname, String lastname, String email, String password){
+    public long adduser(String firstname, String lastname, String email, String password) {
         SQLiteDatabase sqLiteDatabase = getWritableDatabase();
         ContentValues values = new ContentValues();
 
@@ -60,13 +68,13 @@ public class DBHelper extends SQLiteOpenHelper{
     }
 
     //for verifying user
-    public Cursor checkuser(String email, String password){
+    public Cursor checkuser(String email, String password) {
         SQLiteDatabase sqLiteDatabase = getReadableDatabase();
         return sqLiteDatabase.rawQuery("SELECT * FROM users WHERE email=? AND password=?",
                 new String[]{email, password});
     }
 
-    public long addexpense(int userId, String title, String category, double amount, String date){
+    public long addexpense(int userId, String title, String category, double amount, String date) {
         SQLiteDatabase sqLiteDatabase = getWritableDatabase();
         ContentValues values = new ContentValues();
 
@@ -78,19 +86,19 @@ public class DBHelper extends SQLiteOpenHelper{
         return sqLiteDatabase.insert("expenses", null, values);
     }
 
-    public void deleteexpense(int id){
+    public void deleteexpense(int id) {
         SQLiteDatabase sqLiteDatabase = getWritableDatabase();
         sqLiteDatabase.delete("expenses", "_id=?", new String[]{String.valueOf(id)});
     }
 
-    public Cursor getallexpenses(int userId){
+    public Cursor getallexpenses(int userId) {
         SQLiteDatabase sqLiteDatabase = getReadableDatabase();
         return sqLiteDatabase.rawQuery("SELECT * FROM expenses WHERE userId=? ORDER by _id DESC",
                 new String[]{String.valueOf(userId)}
         );
     }
 
-    public boolean hasBalance(int userId){
+    public boolean hasBalance(int userId) {
         SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT balance FROM users WHERE _id=?", new String[]{String.valueOf(userId)});
         cursor.moveToFirst();
@@ -98,19 +106,20 @@ public class DBHelper extends SQLiteOpenHelper{
         cursor.close();
         return exists;
     }
-    public boolean setInitialBalance(int userId, double balance){
-        if(balance<0 || hasBalance(userId)){
+
+    public boolean setInitialBalance(int userId, double balance) {
+        if (balance < 0 || hasBalance(userId)) {
             return false;
         }
         SQLiteDatabase db = getWritableDatabase();
         ContentValues values = new ContentValues();
 
-        values.put("balance",balance);
+        values.put("balance", balance);
         int rows = db.update("users", values, "_id=?", new String[]{String.valueOf(userId)});
         return rows > 0;
     }
 
-    public double getBalance(int userId){
+    public double getBalance(int userId) {
         SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT balance FROM users WHERE _id=?", new String[]{String.valueOf(userId)});
         cursor.moveToFirst();
@@ -119,21 +128,74 @@ public class DBHelper extends SQLiteOpenHelper{
         return balance;
     }
 
-    public boolean deductBalance(int userId, double amount){
+    public boolean deductBalance(int userId, double amount) {
         SQLiteDatabase db = getWritableDatabase();
         double currentBalance = getBalance(userId);
         ContentValues values = new ContentValues();
-        values.put("balance", currentBalance-amount);
+        values.put("balance", currentBalance - amount);
         int rows = db.update("users", values, "_id=?", new String[]{String.valueOf(userId)});
-        return rows>0;
+        return rows > 0;
     }
 
-    public boolean addBalance(int userId,double amount){
+    public boolean addBalance(int userId, double amount) {
         SQLiteDatabase db = getWritableDatabase();
         double currentBalance = getBalance(userId);
         ContentValues values = new ContentValues();
-        values.put("balance", currentBalance+amount);
+        values.put("balance", currentBalance + amount);
         int rows = db.update("users", values, "_id=?", new String[]{String.valueOf(userId)});
-        return rows>0;
+        return rows > 0;
+    }
+
+    public long addwishlistItem(int userID, String name, double target) {
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put("userID", userID);
+        cv.put("name", name);
+        cv.put("target", target);
+        cv.put("saved", 0);
+        return db.insert("wishlist", null, cv);
+    }
+
+    public Cursor getWishlist(int userID) {
+        SQLiteDatabase db = getReadableDatabase();
+        return db.rawQuery("SELECT * FROM wishlist WHERE userID=? ORDER BY _id DESC", new String[]{String.valueOf(userID)});
+    }
+
+    public void deleteWishlistItem(int id) {
+        SQLiteDatabase db = getWritableDatabase();
+        db.delete("wishlist", "_id=?", new String[]{String.valueOf(id)});
+    }
+
+    public boolean addmoney(int id, double amt) {
+        SQLiteDatabase db = getWritableDatabase();
+        Cursor cursor = db.rawQuery("SELECT saved FROM wishlist WHERE _id=?", new String[]{String.valueOf(id)});
+        if (cursor.moveToFirst()) {
+            double current = cursor.getDouble(0);
+            cursor.close();
+            ;
+            ContentValues cv = new ContentValues();
+            cv.put("saved", current + amt);
+            int rows = db.update("wishlist", cv, "_id=?", new String[]{String.valueOf(id)});
+            if (rows > 0) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+        cursor.close();
+        return false;
+    }
+    public boolean updatewishlist(int id, String name, double target){
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put("name",name);
+        cv.put("target",target);
+        int rows =db.update("wishlist",cv,"_id=?",new String[]{String.valueOf(id)});
+        if (rows > 0) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }
+

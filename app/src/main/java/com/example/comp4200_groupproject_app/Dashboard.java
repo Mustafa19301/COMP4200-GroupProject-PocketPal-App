@@ -44,7 +44,7 @@ public class Dashboard extends AppCompatActivity {
         userId = prefs.getInt("userId", -1);
         addExpense = findViewById(R.id.button_addexpenses);
         expenseList = findViewById(R.id.button_viewexpenses);
-        viewWishlist = findViewById(R.id.button_viewexpenses);
+        viewWishlist = findViewById(R.id.button_viewwishlist);
         tv_balance = findViewById(R.id.tv_totalbalance);
         dbHelper = new DBHelper(this, "PocketPalUsers_database", null, 1);
 
@@ -60,6 +60,13 @@ public class Dashboard extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Dashboard.this, ExpenseListActivity.class);
+                startActivity(intent);
+            }
+        });
+        viewWishlist.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Dashboard.this, WishlistActivity.class);
                 startActivity(intent);
             }
         });
