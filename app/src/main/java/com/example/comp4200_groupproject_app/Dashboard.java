@@ -24,7 +24,7 @@ import java.util.ArrayList;
 
 public class Dashboard extends AppCompatActivity {
 
-    Button addExpense, expenseList, viewWishlist;
+    Button addExpense, expenseList, viewWishlist, logoutbutton;
     TextView tv_balance;
     DBHelper dbHelper;
     int userId;
@@ -46,6 +46,7 @@ public class Dashboard extends AppCompatActivity {
         expenseList = findViewById(R.id.button_viewexpenses);
         viewWishlist = findViewById(R.id.button_viewwishlist);
         tv_balance = findViewById(R.id.tv_totalbalance);
+        logoutbutton = findViewById(R.id.logoutbutton);
         dbHelper = new DBHelper(this, "PocketPalUsers_database", null, 1);
 
 
@@ -70,7 +71,14 @@ public class Dashboard extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
+        logoutbutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Dashboard.this, LoginScreenActivity.class);
+                startActivity(intent);
+                Toast.makeText(getApplicationContext(), "Logged Out", Toast.LENGTH_SHORT).show();
+            }
+        });
 
 
         //tv_balance.setText(String.valueOf(dbHelper.getBalance()));

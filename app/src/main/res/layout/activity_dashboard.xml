@@ -119,6 +119,13 @@
             android:layout_height="60dp"
             android:src="@drawable/pocketpallogo"
             android:contentDescription="PocketPal logo" />
+
+        <Button
+            android:id="@+id/logoutbutton"
+            android:layout_width="109dp"
+            android:layout_height="50dp"
+            android:text="Log Out"
+            android:backgroundTint="#c30010"/>
     </LinearLayout>
 
 </LinearLayout>
