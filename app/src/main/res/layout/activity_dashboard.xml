@@ -17,14 +17,14 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
-            android:id="@+id/appLogo_top"
+            android:id="@+id/appimg"
             android:layout_width="30dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             app:srcCompat="@drawable/pocketpallogo" />
 
         <TextView
-            android:id="@+id/tv_topofdashboard"
+            android:id="@+id/tv_title"
             android:layout_width="wrap_content"
             android:layout_height="51dp"
             android:layout_weight="1"

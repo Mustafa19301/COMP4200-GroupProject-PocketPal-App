@@ -27,6 +27,9 @@
             android:name=".MainActivity"
             android:exported="false" />
         <activity
+            android:name=".WishlistActivity"
+            android:exported="false"/>
+        <activity
             android:name=".LoginScreenActivity"
             android:exported="true">
             <intent-filter>
