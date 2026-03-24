@@ -1,4 +1,4 @@
-# COMP4200 Group Project (Group 3) ---> Budget App
+# COMP4200 Group Project (Group 3) ---> PocketPal App (Budget App)
 Group Members:
 - Mustafa Ahmed
 - Murtaza Ahmed
