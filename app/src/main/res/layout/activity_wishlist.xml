@@ -27,7 +27,8 @@
             android:layout_height="51dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="Dashboard"
+            android:text="Wishlist"
+            android:textStyle="bold"
             android:textSize="30dp" />
     </LinearLayout>
 
