@@ -197,5 +197,18 @@ public class DBHelper extends SQLiteOpenHelper {
             return false;
         }
     }
+
+    public boolean updateExpense(int id, String title, String category, double amount, String date){
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put("title", title);
+        values.put("category", category);
+        values.put("amount", amount);
+        values.put("date", date);
+
+        int rows = db.update("expenses", values, "_id=?", new String[]{String.valueOf(id)});
+        return rows > 0;
+    }
 }
 
