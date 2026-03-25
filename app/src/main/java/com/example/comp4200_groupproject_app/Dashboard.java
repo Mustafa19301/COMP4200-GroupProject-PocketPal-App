@@ -24,7 +24,7 @@ import java.util.ArrayList;
 
 public class Dashboard extends AppCompatActivity {
 
-    Button addExpense, expenseList, viewWishlist, logoutbutton;
+    Button addExpense, expenseList, viewWishlist, logoutbutton, adjustBalance;
     TextView tv_balance;
     DBHelper dbHelper;
     int userId;
@@ -47,6 +47,7 @@ public class Dashboard extends AppCompatActivity {
         viewWishlist = findViewById(R.id.button_viewwishlist);
         tv_balance = findViewById(R.id.tv_totalbalance);
         logoutbutton = findViewById(R.id.logoutbutton);
+        adjustBalance = findViewById(R.id.button_adjustbalance);
         dbHelper = new DBHelper(this, "PocketPalUsers_database", null, 1);
 
 
@@ -79,6 +80,12 @@ public class Dashboard extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "Logged Out", Toast.LENGTH_SHORT).show();
             }
         });
+        adjustBalance.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showBalanceDialog(false);
+            }
+        });
 
 
         //tv_balance.setText(String.valueOf(dbHelper.getBalance()));
@@ -90,7 +97,7 @@ public class Dashboard extends AppCompatActivity {
     protected void onResume(){
         super.onResume();
         if(!dbHelper.hasBalance(userId)){
-            showBalanceDialog();
+            showBalanceDialog(true);
         }else{
             double balance = dbHelper.getBalance(userId);
             tv_balance.setText(String.format("$%.2f",balance));
@@ -99,9 +106,14 @@ public class Dashboard extends AppCompatActivity {
     }
 
 
-    private void showBalanceDialog(){
+    private void showBalanceDialog(boolean initial){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Enter Initial Balance");
+        if(initial){
+            builder.setTitle("Enter Initial Balance");
+        }else{
+            builder.setTitle("Enter New Balance");
+        }
+
 
         EditText input = new EditText(this);
         input.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
@@ -115,18 +127,35 @@ public class Dashboard extends AppCompatActivity {
             String value = input.getText().toString().trim();
             if(value.isEmpty()){
                 input.setError("Balance is required");
+                return;
             }
             double balance = Double.parseDouble(value);
             if(balance<0){
                 input.setError("Balance cannot be negative");
                 return;
             }
-            boolean result = dbHelper.setInitialBalance(userId, balance);
+            boolean result = dbHelper.setBalance(userId, balance);
             if (result) {
-                tv_balance.setText(String.format("$%.2f",balance));
-                dialog.dismiss();
+                if(initial){
+                    tv_balance.setText(String.format("$%.2f",balance));
+                    dialog.dismiss();
+                }else{
+                    Cursor cursor = dbHelper.getallexpenses(userId);
+                    double amount = 0;
+                    if(cursor.getCount()>0){
+                        while(cursor.moveToNext()){
+                            amount = cursor.getDouble(cursor.getColumnIndexOrThrow("amount"));
+                            dbHelper.deductBalance(userId, amount);
+                        }
+                    }
+                    balance = dbHelper.getBalance(userId);
+                    tv_balance.setText(String.format("$%.2f",balance));
+                    dialog.dismiss();
+
+                }
+
             } else {
-                Toast.makeText(Dashboard.this, "Balance already set or invalid", Toast.LENGTH_SHORT).show();
+                Toast.makeText(Dashboard.this, "Balance invalid", Toast.LENGTH_SHORT).show();
             }
         });
 

@@ -107,10 +107,11 @@ public class DBHelper extends SQLiteOpenHelper {
         return exists;
     }
 
-    public boolean setInitialBalance(int userId, double balance) {
-        if (balance < 0 || hasBalance(userId)) {
+    public boolean setBalance(int userId, double balance) {
+        if(balance<0){
             return false;
         }
+
         SQLiteDatabase db = getWritableDatabase();
         ContentValues values = new ContentValues();
 
