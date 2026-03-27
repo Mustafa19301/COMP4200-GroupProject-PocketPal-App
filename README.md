@@ -32,4 +32,5 @@ These are the core activity files that are used for this implementation that car
 - `MainActivity.java`
 - `WishlistActivity.java`
 - `WishlistItem.java`
+- `AndroidManifest.xml`
 - `README.md`
