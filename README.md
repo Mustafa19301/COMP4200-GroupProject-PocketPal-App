@@ -1,4 +1,7 @@
 # COMP4200 Group Project (Group 3) ---> PocketPal App (Budget App)
+
+<img width="459" height="310" alt="pocketpallogo-removebg-preview" src="https://github.com/user-attachments/assets/0ce4cc04-6b5e-474b-873e-e8f50835b687" />
+
 Group Members:
 - Mustafa Ahmed
 - Murtaza Ahmed
